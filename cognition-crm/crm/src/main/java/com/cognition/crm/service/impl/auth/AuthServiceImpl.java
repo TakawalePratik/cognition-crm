@@ -1,5 +1,5 @@
 package com.cognition.crm.service.impl.auth;
 
-public class AuthServiceImpl {
+public class AuthServiceImpl implements AuthService {
 
 }
