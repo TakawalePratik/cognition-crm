@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Trainer</title>
+</head>
+<body>
+
+<h2>Add Trainer</h2>
+
+<form th:action="@{/trainers/save}" 
+      th:object="${trainer}" 
+      method="post">
+
+    Name: <input type="text" th:field="*{fullName}" /><br>
+    Email: <input type="text" th:field="*{email}" /><br>
+    Phone: <input type="text" th:field="*{phone}" /><br>
+    Specialization: <input type="text" th:field="*{specialization}" /><br>
+    Experience: <input type="number" th:field="*{experienceYears}" /><br>
+
+    <button type="submit">Save</button>
+</form>
+
+</body>
+</html>

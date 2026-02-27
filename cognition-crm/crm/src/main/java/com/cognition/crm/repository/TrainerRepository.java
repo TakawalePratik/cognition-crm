@@ -1,5 +1,7 @@
 package com.cognition.crm.repository;
 
-public interface TrainerRepository {
+import com.cognition.crm.entity.Trainer;
+import org.springframework.data.jpa.repository.JpaRepository;
 
+public interface TrainerRepository extends JpaRepository<Trainer, Long> {
 }

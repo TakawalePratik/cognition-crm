@@ -1,10 +1,7 @@
 package com.cognition.crm.entity;
 
-package com.cognition.crm.entity;
-
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "trainers")
@@ -14,18 +11,14 @@ public class Trainer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long trainerId;
 
-    @Column(nullable = false, length = 150)
+    @Column(nullable = false)
     private String fullName;
 
-    @Column(nullable = false, unique = true, length = 150)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(length = 20)
     private String phone;
-
-    @Column(length = 200)
     private String specialization;
-
     private Integer experienceYears;
 
     @Column(nullable = false)
@@ -33,16 +26,9 @@ public class Trainer {
 
     private LocalDateTime createdAt;
 
-    // 🔗 One Trainer can handle multiple batches
-    @OneToMany(mappedBy = "trainer")
-    private List<Batch> batches;
-
-    // Constructors
     public Trainer() {
         this.createdAt = LocalDateTime.now();
     }
-
-    // Getters & Setters
 
     public Long getTrainerId() {
         return trainerId;
@@ -96,19 +82,17 @@ public class Trainer {
         return isActive;
     }
 
-    public void setIsActive(Boolean active) {
-        isActive = active;
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public List<Batch> getBatches() {
-        return batches;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void setBatches(List<Batch> batches) {
-        this.batches = batches;
-    }
+    
 }
