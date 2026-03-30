@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Cognition CRM Institute</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            
+        }
+        
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .notification-badge {
+            position: relative;
+            display: inline-block;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .notification-dropdown {
+            position: fixed;
+            right: 20px;
+            top: 70px;
+            width: 350px;
+            max-height: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            overflow-y: auto;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .notification-item-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .notification-item-message {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .notification-item-time {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border-top: 5px solid #667eea;
+            position: relative;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 25px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .sidebar-item {
+            padding: 15px 20px;
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .sidebar-item:hover {
+            background-color: #f8f9fa;
+            border-left-color: #667eea;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand">
+                <i class="fas fa-graduation-cap"></i> Cognition CRM
+            </span>
+            <div class="d-flex gap-3 align-items-center">
+                <div class="notification-badge" onclick="toggleNotifications()">
+                    <i class="fas fa-bell" style="font-size: 1.5rem; color: white; cursor: pointer;"></i>
+                    <span class="notification-count" id="notifCount">0</span>
+                </div>
+                <span class="navbar-text">Welcome!</span>
+            </div>
+        </div>
+    </navbar>
+
+    <!-- NOTIFICATIONS DROPDOWN -->
+    <div class="notification-dropdown" id="notificationDropdown">
+        <div style="padding: 15px; font-weight: 600; border-bottom: 2px solid #667eea;">
+            <i class="fas fa-bell"></i> Notifications
+        </div>
+        <div id="notificationsList"></div>
+    </div>
+
+    <div class="container-fluid p-4">
+        <div class="row">
+            <!-- SIDEBAR -->
+            <div class="col-md-2">
+                <div class="sidebar">
+                    <a href="/dashboard" class="sidebar-item" style="background-color: #f0f4ff; border-left-color: #667eea; color: #667eea;">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                    <a href="/enquiry" class="sidebar-item">
+                        <i class="fas fa-envelope"></i> Enquiries
+                    </a>
+                    <a href="/student" class="sidebar-item">
+                        <i class="fas fa-users"></i> Students
+                    </a>
+                    <a href="/course" class="sidebar-item">
+                        <i class="fas fa-book"></i> Courses
+                    </a>
+                    <a href="/payment" class="sidebar-item">
+                        <i class="fas fa-credit-card"></i> Payments
+                    </a>
+                    <hr style="margin: 15px 0; opacity: 0.2;">
+                    <a href="/logout" class="sidebar-item" style="color: #dc3545;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <div class="col-md-10">
+                <div style="margin-bottom: 30px;">
+                    <h1 style="font-size: 2.5rem; font-weight: 700; color: #333; margin: 0;">Dashboard</h1>
+                    <p style="color: #666; margin: 5px 0 0 0;">Real-time CRM Management System</p>
+                </div>
+
+                <!-- STAT CARDS -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="stat-card">
+                            <i class="fas fa-envelope" style="font-size: 2rem; opacity: 0.1; float: right;"></i>
+                            <h3 style="font-size: 0.9rem; color: #666; margin: 0 0 15px 0; text-transform: uppercase;">Total Enquiries</h3>
+                            <p class="stat-number" th:text="${totalEnquiries}">0</p>
+                            <small style="color: #28a745;"><i class="fas fa-arrow-up"></i> This Month</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="stat-card" style="border-top-color: #28a745;">
+                            <i class="fas fa-users" style="font-size: 2rem; opacity: 0.1; float: right;"></i>
+                            <h3 style="font-size: 0.9rem; color: #666; margin: 0 0 15px 0; text-transform: uppercase;">Active Students</h3>
+                            <p class="stat-number" th:text="${activeStudents}">0</p>
+                            <small style="color: #28a745;"><i class="fas fa-arrow-up"></i> Enrolled</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="stat-card" style="border-top-color: #17a2b8;">
+                            <i class="fas fa-book" style="font-size: 2rem; opacity: 0.1; float: right;"></i>
+                            <h3 style="font-size: 0.9rem; color: #666; margin: 0 0 15px 0; text-transform: uppercase;">Active Courses</h3>
+                            <p class="stat-number" th:text="${activeCourses}">0</p>
+                            <small style="color: #17a2b8;"><i class="fas fa-arrow-right"></i> Running</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="stat-card" style="border-top-color: #ffc107;">
+                            <i class="fas fa-money-bill" style="font-size: 2rem; opacity: 0.1; float: right;"></i>
+                            <h3 style="font-size: 0.9rem; color: #666; margin: 0 0 15px 0; text-transform: uppercase;">Pending Payments</h3>
+                            <p class="stat-number">₹<span th:text="${#numbers.formatDecimal(pendingPayments/100000, 0, 'COMMA', 2, 'POINT')}">0</span>L</p>
+                            <small style="color: #ffc107;"><i class="fas fa-clock"></i> Pending</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK ACTIONS -->
+                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 20px;"><i class="fas fa-lightning-bolt" style="color: #667eea;"></i> Quick Actions</h3>
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <a href="/enquiry/add" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 10px; text-decoration: none; display: block; text-align: center; font-weight: 600; transition: all 0.3s;">
+                                <i class="fas fa-plus"></i> Add Enquiry
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="/student/add" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 15px; border-radius: 10px; text-decoration: none; display: block; text-align: center; font-weight: 600; transition: all 0.3s;">
+                                <i class="fas fa-user-plus"></i> Add Student
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="/course/add" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 15px; border-radius: 10px; text-decoration: none; display: block; text-align: center; font-weight: 600; transition: all 0.3s;">
+                                <i class="fas fa-book-plus"></i> Add Course
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="/payment/add" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 15px; border-radius: 10px; text-decoration: none; display: block; text-align: center; font-weight: 600; transition: all 0.3s;">
+                                <i class="fas fa-money-bill-wave"></i> Record Payment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LIVE ACTIVITY -->
+                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                    <h3 style="margin-bottom: 20px;"><i class="fas fa-history" style="color: #667eea;"></i> Live Activity</h3>
+                    <div id="activityList" style="max-height: 300px; overflow-y: auto;">
+                        <p style="color: #999; text-align: center;">Waiting for activities...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+<script>
+    let stompClient = null;
+    let notifications = [];
+
+    // 🔊 Audio setup
+    let audio = new Audio('/sound/notification.mp3');
+    let audioEnabled = false;
+
+    // 🔥 Enable audio after FIRST user interaction (IMPORTANT)
+    document.addEventListener('click', function () {
+        if (!audioEnabled) {
+            audio.play().then(() => {
+                audio.pause();
+                audio.currentTime = 0;
+                audioEnabled = true;
+                console.log("🔊 Audio enabled");
+            }).catch(err => console.log("Enable error:", err));
+        }
+    });
+
+    // 🔗 WebSocket connect
+    function connect() {
+        let socket = new SockJS('/ws-crm');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function() {
+
+            stompClient.subscribe('/topic/dashboard', function(message) {
+
+                let notification = JSON.parse(message.body);
+
+                // 🔔 Play sound ONLY if enabled
+                if (audioEnabled) {
+                    audio.currentTime = 0;
+                    audio.play().then(() => {
+                        console.log("🔊 Sound played");
+                    }).catch(err => console.log("Play blocked:", err));
+                }
+
+                // add notification
+                notifications.unshift(notification);
+
+                updateNotificationUI();
+            });
+        });
+    }
+
+    // 📥 Load old notifications
+    function loadNotifications() {
+        fetch('/notifications')
+            .then(res => res.json())
+            .then(data => {
+                notifications = data.reverse();
+                updateNotificationUI();
+            });
+    }
+
+    // 🔔 Update UI
+    function updateNotificationUI() {
+
+        let unreadCount = notifications.filter(n => !n.readStatus).length;
+        document.getElementById('notifCount').textContent = unreadCount;
+
+        let html = '';
+
+        notifications.forEach(n => {
+            html += `
+                <div class="notification-item"
+                     onclick="markAsRead(${n.id})"
+                     style="${n.readStatus ? '' : 'font-weight:bold; background:#eef5ff;'}">
+
+                    <div><strong>${n.title}</strong></div>
+                    <div>${n.message}</div>
+                    <small>${new Date(n.createdAt).toLocaleString()}</small>
+                </div>
+            `;
+        });
+
+        document.getElementById('notificationsList').innerHTML = html;
+    }
+
+    // ✅ Mark as read
+    function markAsRead(id) {
+
+        fetch('/notifications/read/' + id, { method: 'POST' });
+
+        notifications = notifications.map(n => {
+            if (n.id === id) {
+                n.readStatus = true;
+            }
+            return n;
+        });
+
+        updateNotificationUI();
+    }
+
+    // 🔔 Toggle dropdown
+    function toggleNotifications() {
+        document.getElementById('notificationDropdown').classList.toggle('show');
+    }
+
+    // 🚀 On load
+    window.addEventListener('load', () => {
+        connect();
+        loadNotifications();
+    });
+</script>
+</body>
+</html>ha ahe maza dashboard real wala  ani tuza bgh vr cha

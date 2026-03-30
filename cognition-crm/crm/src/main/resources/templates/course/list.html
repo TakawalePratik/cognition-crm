@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - Cognition CRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container-content {
+            margin-top: 30px;
+        }
+        .course-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .course-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+        }
+        .course-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .course-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            color: #666;
+        }
+        .course-fee {
+            font-size: 1.2rem;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/dashboard">
+                <i class="fas fa-graduation-cap"></i> Cognition CRM
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/course">Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container container-content">
+        <div class="header-section">
+            <h1>📚 Course Management</h1>
+            <a href="/course/add" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Course
+            </a>
+        </div>
+
+        <div class="row">
+            <div th:each="course : ${courses}" class="col-md-6">
+                <div class="course-card">
+                    <div class="course-title" th:text="${course.courseName}"></div>
+                    
+                    <div class="course-info">
+                        <span><i class="fas fa-clock"></i> Duration:</span>
+                        <span th:text="${course.durationMonths} + ' Months'"></span>
+                    </div>
+
+                    <div class="course-info">
+                        <span><i class="fas fa-users"></i> Capacity:</span>
+                        <span th:text="${course.capacity} + ' Students'"></span>
+                    </div>
+
+                    <div class="course-info">
+                        <span><i class="fas fa-rupee-sign"></i> Fees:</span>
+                        <span class="course-fee">₹<span th:text="${course.courseFees}"></span></span>
+                    </div>
+
+                    <div class="course-info">
+                        <span><i class="fas fa-info-circle"></i> Description:</span>
+                        <span th:text="${course.description}"></span>
+                    </div>
+
+                    <div style="margin-top: 15px;">
+                        <a th:href="@{/course/edit/{id}(id=${course.id})}" class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form th:action="@{/course/delete/{id}(id=${course.id})}" method="get" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(courses)}" class="alert alert-info text-center">
+            No courses found. <a href="/course/add">Add one now!</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
