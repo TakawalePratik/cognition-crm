@@ -25,10 +25,10 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+@Bean
+public PasswordEncoder passwordEncoder() {
+    return org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
+}
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

@@ -24,7 +24,7 @@ public class DataInitializer {
             if (userRepository.findByUsername("admin").isEmpty()) {
                 User adminUser = new User();
                 adminUser.setUsername("admin");
-                adminUser.setPassword(passwordEncoder.encode("admin123"));
+                adminUser.setPassword("admin123");
                 adminUser.setEmail("admin@cognitioncrm.com");
                 adminUser.setFullName("Administrator");
                 adminUser.setEnabled(true);  // ✅ Fixed: was setIsActive(), now setEnabled()
@@ -40,7 +40,7 @@ public class DataInitializer {
             if (userRepository.findByUsername("demo").isEmpty()) {
                 User demoUser = new User();
                 demoUser.setUsername("demo");
-                demoUser.setPassword(passwordEncoder.encode("demo123"));
+                demoUser.setPassword("demo123");
                 demoUser.setEmail("demo@cognitioncrm.com");
                 demoUser.setFullName("Demo User");
                 demoUser.setEnabled(true);  // ✅ Fixed: was setIsActive(), now setEnabled()
