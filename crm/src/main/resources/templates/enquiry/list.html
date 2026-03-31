@@ -88,6 +88,8 @@
                         <th>Status</th>
                         <th>Created Date</th>
                         <th>Actions</th>
+                        
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -118,6 +120,9 @@
                         <td>
                             <a th:href="@{/enquiry/edit/{id}(id=${enquiry.id})}" class="btn btn-sm btn-warning btn-sm-custom">
                                 <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a th:href="@{/crm/enquiry/{id}(id=${enquiry.id})}" class="btn btn-sm btn-warning btn-sm-custom">
+                                <i class="fas fa-edit"></i> Followup
                             </a>
                             <form th:action="@{/enquiry/delete/{id}(id=${enquiry.id})}" method="get" style="display:inline;">
                                 <button type="submit" class="btn btn-sm btn-danger btn-sm-custom" onclick="return confirm('Are you sure?')">

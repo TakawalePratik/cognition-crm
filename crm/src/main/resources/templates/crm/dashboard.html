@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Flow Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card { border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-radius: 12px; }
+        .stat-card { padding: 25px; border-radius: 12px; background: white; border-left: 5px solid #667eea; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: #333; }
+        .flow-step { display: inline-block; padding: 12px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; margin: 0 8px; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand"><i class="fas fa-project-diagram"></i> CRM Real-time Flow Dashboard</span>
+            <a href="/dashboard" class="btn btn-sm btn-light">Admin Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="container-fluid p-4">
+        <!-- CRM FLOW VISUALIZATION -->
+        <div class="card mb-4">
+            <div class="card-body text-center p-4">
+                <h5 class="mb-4"><i class="fas fa-sitemap"></i> CRM Process Flow</h5>
+                <div style="overflow-x: auto; padding: 10px;">
+                    <span class="flow-step"><i class="fas fa-envelope"></i> Enquiry</span>
+                    <span style="color: #667eea; font-size: 1.5rem;">↓</span>
+                    <span class="flow-step"><i class="fas fa-phone"></i> Follow-ups</span>
+                    <span style="color: #667eea; font-size: 1.5rem;">↓</span>
+                    <span class="flow-step"><i class="fas fa-user-check"></i> Convert</span>
+                    <span style="color: #667eea; font-size: 1.5rem;">↓</span>
+                    <span class="flow-step"><i class="fas fa-graduation-cap"></i> Enrollment</span>
+                    <span style="color: #667eea; font-size: 1.5rem;">↓</span>
+                    <span class="flow-step"><i class="fas fa-credit-card"></i> Payment</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- KEY METRICS -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <p class="text-muted mb-2"><i class="fas fa-envelope"></i> Total Enquiries</p>
+                    <p class="stat-number" th:text="${totalEnquiries}">0</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="border-left-color: #28a745;">
+                    <p class="text-muted mb-2"><i class="fas fa-arrow-right"></i> Converted</p>
+                    <p class="stat-number" style="color: #28a745;" th:text="${convertedEnquiries}">0</p>
+                    <small class="text-muted" th:text="'Rate: ' + ${conversionRate} + '%'">Rate: 0%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="border-left-color: #ffc107;">
+                    <p class="text-muted mb-2"><i class="fas fa-phone"></i> Pending Follow-ups</p>
+                    <p class="stat-number" style="color: #ffc107;" th:text="${pendingFollowUps}">0</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="border-left-color: #17a2b8;">
+                    <p class="text-muted mb-2"><i class="fas fa-graduation-cap"></i> Active Enrollments</p>
+                    <p class="stat-number" style="color: #17a2b8;" th:text="${activeEnrollments}">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- REVENUE TRACKING -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="stat-card" style="border-left-color: #28a745;">
+                    <p class="text-muted mb-2"><i class="fas fa-check-circle"></i> Collected</p>
+                    <p class="stat-number" style="color: #28a745;" th:text="'₹' + ${collectedRevenue}">₹0</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card" style="border-left-color: #ffc107;">
+                    <p class="text-muted mb-2"><i class="fas fa-clock"></i> Pending</p>
+                    <p class="stat-number" style="color: #ffc107;" th:text="'₹' + ${pendingRevenue}">₹0</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card" style="border-left-color: #667eea;">
+                    <p class="text-muted mb-2"><i class="fas fa-chart-line"></i> Total</p>
+                    <p class="stat-number" style="color: #667eea;" th:text="'₹' + ${totalRevenue}">₹0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECENT ENROLLMENTS -->
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="fas fa-clock"></i> Recent Enrollments (Real-time)</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student</th>
+                            <th>Course</th>
+                            <th>Enrollment Date</th>
+                            <th>Status</th>
+                            <th>Total Fees</th>
+                            <th>Paid</th>
+                            <th>Progress</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="enrollment : ${topEnrollments}">
+                            <td th:text="${enrollment.student.name}">Student</td>
+                            <td th:text="${enrollment.course.courseName}">Course</td>
+                            <td th:text="${#temporals.format(enrollment.enrollmentDate, 'dd-MM-yyyy')}">Date</td>
+                            <td>
+                                <span class="badge bg-success" th:text="${enrollment.enrollmentStatus}">Status</span>
+                            </td>
+                            <td th:text="'₹' + ${enrollment.totalFees}">Amount</td>
+                            <td style="color: #28a745; font-weight: 600;" th:text="'₹' + ${enrollment.paidAmount}">Paid</td>
+                            <td>
+                                <div class="progress" style="height: 20px; width: 80px;">
+                                    <div class="progress-bar bg-success" th:style="${'width: ' + ((enrollment.paidAmount / enrollment.totalFees) * 100) + '%'}"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <a th:href="@{/crm/enrollment/{id}(id=${enrollment.id})}" class="btn btn-sm btn-primary">View</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
