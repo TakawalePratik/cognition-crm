@@ -18,4 +18,13 @@ public interface EnquiryFollowUpRepository extends JpaRepository<EnquiryFollowUp
     List<EnquiryFollowUp> findByFollowupDateBetween(LocalDateTime startDate, LocalDateTime endDate);
     
     List<EnquiryFollowUp> findByOutcome(String outcome);
+
+    // TODAY
+List<EnquiryFollowUp> findByNextFollowupDateBetween(LocalDateTime start, LocalDateTime end);
+
+// OVERDUE
+List<EnquiryFollowUp> findByNextFollowupDateBefore(LocalDateTime date);
+
+// UPCOMING
+List<EnquiryFollowUp> findByNextFollowupDateAfter(LocalDateTime date);
 }
