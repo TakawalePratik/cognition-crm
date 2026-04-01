@@ -1,15 +1,24 @@
 package com.example.cognition_crm_Institute1.controller;
 
 import com.example.cognition_crm_Institute1.entity.Enquiry;
+import com.example.cognition_crm_Institute1.service.EnquiryExcelService;
 import com.example.cognition_crm_Institute1.service.EnquiryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
+
+
+import org.springframework.http.*;
+import java.io.IOException;
+
 
 @Controller
 @RequestMapping("/enquiry")
@@ -81,5 +90,25 @@ public class EnquiryController {
         model.addAttribute("enquiries", enquiries);
         model.addAttribute("status", status);
         return "enquiry/list";
+    }
+
+    //excel export
+      @Autowired
+    private EnquiryExcelService excelService;
+
+    @GetMapping("/export")
+    public ResponseEntity<InputStreamResource> exportEnquiries() throws IOException {
+
+        List<Enquiry> enquiries = enquiryService.getAllEnquiries();
+
+        ByteArrayInputStream in = excelService.exportToExcel(enquiries);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=enquiries.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(new InputStreamResource(in));
     }
 }
