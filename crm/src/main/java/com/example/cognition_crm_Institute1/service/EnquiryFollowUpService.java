@@ -21,41 +21,36 @@ public class EnquiryFollowUpService {
     @Autowired
     private EnquiryRepository enquiryRepository;
 
-    @Autowired
-    private NotificationService notificationService;
-
-    // Create follow-up and auto-update enquiry status
     public EnquiryFollowUp createFollowUp(Long enquiryId, EnquiryFollowUp followUp) {
-        Optional<Enquiry> enquiry = enquiryRepository.findById(enquiryId);
-        if (enquiry.isPresent()) {
-            followUp.setEnquiry(enquiry.get());
-            
-            // Auto-update enquiry status based on follow-up outcome
-            if ("Positive".equals(followUp.getOutcome())) {
-                enquiry.get().setEnquiryStatus("Qualified");
-            } else if ("Negative".equals(followUp.getOutcome())) {
-                enquiry.get().setEnquiryStatus("Rejected");
-            } else {
-                enquiry.get().setEnquiryStatus("Contacted");
-            }
-            
-            enquiry.get().setLastFollowUp(LocalDateTime.now());
-            enquiryRepository.save(enquiry.get());
-            
-            EnquiryFollowUp saved = followUpRepository.save(followUp);
-            
-            // Send real-time notification
-            notificationService.notifyFollowUp(
-                "Follow-up logged for " + enquiry.get().getName(),
-                followUp.getNotes(),
-                enquiryId
-            );
-            
-            return saved;
+
+    // ✅ FORCE NEW INSERT (VERY IMPORTANT)
+    followUp.setId(null);
+
+    Optional<Enquiry> enquiry = enquiryRepository.findById(enquiryId);
+
+    if (enquiry.isPresent()) {
+
+        followUp.setEnquiry(enquiry.get());
+
+        // ✅ Handle null outcome safely
+        String outcome = followUp.getOutcome();
+
+        if ("Positive".equalsIgnoreCase(outcome)) {
+            enquiry.get().setEnquiryStatus("Qualified");
+        } else if ("Negative".equalsIgnoreCase(outcome)) {
+            enquiry.get().setEnquiryStatus("Rejected");
+        } else {
+            enquiry.get().setEnquiryStatus("Contacted");
         }
-        return null;
+
+        enquiry.get().setLastFollowUp(LocalDateTime.now());
+        enquiryRepository.save(enquiry.get());
+
+        return followUpRepository.save(followUp);
     }
 
+    return null;
+}
     public List<EnquiryFollowUp> getFollowUpsByEnquiry(Long enquiryId) {
         Optional<Enquiry> enquiry = enquiryRepository.findById(enquiryId);
         if (enquiry.isPresent()) {

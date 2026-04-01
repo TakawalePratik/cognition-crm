@@ -227,4 +227,8 @@ public class CRMFlowController {
         
         return "crm/dashboard";
     }
+    @GetMapping("/enquiry/{id}/followup")
+public String handleFollowupGet(@PathVariable Long id) {
+    return "redirect:/crm/enquiry/" + id;
+}
 }
